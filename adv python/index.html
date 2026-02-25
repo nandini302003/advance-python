@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>STUDENT GRADE BOOK</title>
+
+<style>
+
+body{
+margin:0;
+background:black;
+color:cyan;
+font-family:Segoe UI;
+overflow-x:hidden;
+}
+
+/* STAR BACKGROUND */
+
+#canvas{
+position:fixed;
+top:0;
+left:0;
+z-index:-1;
+}
+
+/* TITLE */
+
+.title{
+text-align:center;
+font-size:40px;
+margin-top:20px;
+text-shadow:0 0 20px cyan;
+}
+
+/* BUTTON */
+
+button{
+display:block;
+margin:20px auto;
+padding:15px 30px;
+font-size:18px;
+background:black;
+color:cyan;
+border:2px solid cyan;
+cursor:pointer;
+box-shadow:0 0 20px cyan;
+}
+
+button:hover{
+background:cyan;
+color:black;
+}
+
+/* TOPPER CARDS */
+
+.topper-container{
+display:flex;
+justify-content:center;
+gap:20px;
+flex-wrap:wrap;
+padding:20px;
+}
+
+.card{
+width:250px;
+padding:20px;
+border:1px solid cyan;
+box-shadow:0 0 20px cyan;
+border-radius:10px;
+text-align:center;
+}
+
+/* BADGES */
+
+.badge{
+font-size:22px;
+margin-top:10px;
+}
+
+.gold{color:gold;}
+.silver{color:silver;}
+.bronze{color:#cd7f32;}
+
+/* TABLE */
+
+table{
+margin:20px auto;
+border-collapse:collapse;
+width:90%;
+box-shadow:0 0 20px cyan;
+display:none;
+}
+
+th, td{
+border:1px solid cyan;
+padding:10px;
+text-align:center;
+}
+
+th{
+background:black;
+color:cyan;
+}
+
+</style>
+
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div class="title">
+STUDENT GRADE BOOK
+</div>
+
+<button onclick="scan()">START  SCAN</button>
+
+<div class="topper-container" id="toppers"></div>
+
+<table id="leaderboard">
+<thead>
+<tr>
+<th>Rank</th>
+<th>Name</th>
+<th>Python</th>
+<th>Math</th>
+<th>AI</th>
+<th>DSA</th>
+<th>Percentage</th>
+<th>Grade</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+<script>
+
+/* STAR BACKGROUND */
+
+let canvas=document.getElementById("canvas");
+let ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let stars=[];
+
+for(let i=0;i<150;i++){
+
+stars.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+size:Math.random()*2
+});
+
+}
+
+function animate(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="cyan";
+
+for(let star of stars){
+
+ctx.fillRect(star.x,star.y,star.size,star.size);
+
+star.y+=0.5;
+
+if(star.y>canvas.height)
+star.y=0;
+
+}
+
+requestAnimationFrame(animate);
+
+}
+
+animate();
+
+
+/* STUDENT DATA WITH ALL GRADES */
+
+let students=[
+
+{name:"Priya Singh",marks:{Python:98,Math:95,AI:97,DSA:96}}, // A+
+{name:"Nandini Panda",marks:{Python:88,Math:92,AI:85,DSA:90}}, // A
+{name:"Sneha Das",marks:{Python:84,Math:82,AI:86,DSA:80}}, // A
+{name:"Rahul Sharma",marks:{Python:75,Math:72,AI:78,DSA:74}}, // B
+{name:"Arjun Mehta",marks:{Python:70,Math:68,AI:72,DSA:71}}, // B
+{name:"Amit Kumar",marks:{Python:65,Math:60,AI:68,DSA:66}}, // C
+{name:"Riya Patel",marks:{Python:62,Math:64,AI:60,DSA:63}}, // C
+{name:"Karan Verma",marks:{Python:55,Math:52,AI:58,DSA:54}}, // D
+{name:"Neha Kapoor",marks:{Python:51,Math:50,AI:53,DSA:52}}, // D
+{name:"Vikram Roy",marks:{Python:40,Math:45,AI:42,DSA:38}}, // F
+{name:"Simran Kaur",marks:{Python:35,Math:30,AI:40,DSA:32}}, // F
+{name:"Anjali Gupta",marks:{Python:90,Math:88,AI:92,DSA:91}}, // A+
+{name:"Devansh Joshi",marks:{Python:80,Math:78,AI:82,DSA:79}}, // A
+{name:"Pooja Reddy",marks:{Python:72,Math:70,AI:74,DSA:73}}, // B
+{name:"Sahil Malhotra",marks:{Python:60,Math:62,AI:58,DSA:61}}, // C
+{name:"Tanya Nair",marks:{Python:48,Math:50,AI:45,DSA:47}} // F 
+];
+
+
+/* CALCULATE PERCENTAGE */
+
+function getPercentage(student){
+
+let sum=0;
+
+for(let subject in student.marks){
+sum+=student.marks[subject];
+}
+
+return (sum/4).toFixed(2);
+
+}
+
+
+/* CALCULATE GRADE */
+
+function getGrade(percent){
+
+percent=parseFloat(percent);
+
+if(percent>=90) return "A+";
+if(percent>=80) return "A";
+if(percent>=70) return "B";
+if(percent>=60) return "C";
+if(percent>=50) return "D";
+return "F";
+
+}
+
+
+/* MAIN FUNCTION */
+
+function scan(){
+
+let toppersDiv=document.getElementById("toppers");
+let table=document.getElementById("leaderboard");
+let tableBody=document.querySelector("#leaderboard tbody");
+
+/* SHOW TABLE ONLY AFTER SCAN */
+
+table.style.display="table";
+
+toppersDiv.innerHTML="";
+tableBody.innerHTML="";
+
+
+students.forEach(s=>{
+s.percent=getPercentage(s);
+s.grade=getGrade(s.percent);
+});
+
+
+let sorted=[...students];
+
+sorted.sort((a,b)=>b.percent-a.percent);
+
+
+/* TOP 3 */
+
+let badges=["🥇","🥈","🥉"];
+let badgeClass=["gold","silver","bronze"];
+
+for(let i=0;i<3;i++){
+
+let student=sorted[i];
+
+let card=document.createElement("div");
+
+card.className="card";
+
+card.innerHTML=`
+
+<h3>${student.name}</h3>
+
+Percentage: ${student.percent}%<br>
+
+Grade: ${student.grade}
+
+<div class="badge ${badgeClass[i]}">
+${badges[i]} TOPPER
+</div>
+
+`;
+
+toppersDiv.appendChild(card);
+
+}
+
+
+/* TABLE */
+
+sorted.forEach((student,index)=>{
+
+let row=document.createElement("tr");
+
+row.innerHTML=`
+
+<td>${index+1}</td>
+<td>${student.name}</td>
+<td>${student.marks.Python}</td>
+<td>${student.marks.Math}</td>
+<td>${student.marks.AI}</td>
+<td>${student.marks.DSA}</td>
+<td>${student.percent}%</td>
+<td>${student.grade}</td>
+
+`;
+
+tableBody.appendChild(row);
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
