@@ -1,31 +1,25 @@
-students = []
+'''10. Write a program to:
+ - Read a file
+ - Count number of lines, words and characters'''
 
-n = int(input("Enter number of students: "))
+file_name = input("Enter the file name: ")
+try:
+    with open(file_name, 'r') as file:
+        lines = file.readlines()
+        num_lines = len(lines)
+        num_words = sum(len(line.split()) for line in lines)
+        num_characters = sum(len(line) for line in lines)
 
-for i in range(n):
-    name = input("Name: ")
-    roll = input("Roll No: ")
-    marks = float(input("Marks: "))
+    print(f"Number of lines: {num_lines}")
+    print(f"Number of words: {num_words}")
+    print(f"Number of characters: {num_characters}")
+except FileNotFoundError:
+    print(f"File '{file_name}' not found.")
+except Exception as e:
+    print(f"An error occurred: {e}")
 
-    student = {
-        "name": name,
-        "roll": roll,
-        "marks": marks
-    }
-    students.append(student)
 
-# Display all
-print("\nAll Students:")
-for s in students:
-    print(s)
-
-# Pass/Fail filter
-print("\nPassed Students:")
-for s in students:
-    if s["marks"] >= 40:
-        print(s["name"], "-", s["marks"])
-
-print("\nFailed Students:")
-for s in students:
-    if s["marks"] < 40:
-        print(s["name"], "-", s["marks"])
+## Sample Output:# Enter the file name: sample.txt
+# Number of lines: 5    
+# Number of words: 20
+# Number of characters: 100

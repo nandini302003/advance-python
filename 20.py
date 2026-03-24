@@ -1,66 +1,53 @@
-class User:
-    def __init__(self, username):
-        self.username = username
-        self.posts = []
+'''20. Build mini project:
+ STUDENT MANAGEMENT SYSTEM
+ Features:
+ - Add student
+ - View student
+ - Delete student
+ - Store data in file or database'''
 
-    def create_post(self, content):
-        post = Post(self, content)
-        self.posts.append(post)
-        return post
+import sqlite3
+class StudentManagementSystem:
+    def __init__(self):
+        self.conn = sqlite3.connect('students.db')
+        self.cursor = self.conn.cursor()
+        self.create_table()
+    def create_table(self):
+        self.cursor.execute('''
+            CREATE TABLE IF NOT EXISTS Student (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL
+            )
+        ''')
+    def add_student(self, name):
+        self.cursor.execute('INSERT INTO Student (name) VALUES (?)', (name,))
+        self.conn.commit()
+    def view_students(self):
+        self.cursor.execute('SELECT * FROM Student')
+        return self.cursor.fetchall()
+    def delete_student(self, student_id):
+        self.cursor.execute('DELETE FROM Student WHERE id = ?', (student_id,))
+        self.conn.commit()
+    def close(self):
+        self.conn.close()
+# Example usage
+if __name__ == "__main__":
 
-    def __str__(self):
-        return f"User: {self.username}"
+    sms = StudentManagementSystem()
+    sms.add_student("Alice")
+    sms.add_student("Bob")
+    print("Students:")
+    for student in sms.view_students():
+        print(f"ID: {student[0]}, Name: {student[1]}")
+    sms.delete_student(1)  # Delete student with ID 1
+    print("Students after deletion:")
+    for student in sms.view_students():
+        print(f"ID: {student[0]}, Name: {student[1]}")
+    sms.close()
 
-
-class Post:
-    total_posts = 0   # class variable
-
-    def __init__(self, user, content):
-        self.user = user
-        self.content = content
-        self.likes = 0
-        self.comments = []
-        Post.total_posts += 1
-
-    def like(self):
-        self.likes += 1
-
-    def add_comment(self, user, text):
-        comment = Comment(user, text)
-        self.comments.append(comment)
-
-    def __str__(self):
-        result = f"\nPost by {self.user.username}: {self.content}\nLikes: {self.likes}\nComments:\n"
-        for c in self.comments:
-            result += str(c) + "\n"
-        return result
-
-
-class Comment:
-    def __init__(self, user, text):
-        self.user = user
-        self.text = text
-
-    def __str__(self):
-        return f"{self.user.username}: {self.text}"
-
-
-# -------- Example Usage --------
-u1 = User("Nandini")
-u2 = User("Rahul")
-
-# Create post
-p1 = u1.create_post("Hello everyone!")
-
-# Likes
-p1.like()
-p1.like()
-
-# Comments
-p1.add_comment(u2, "Nice post!")
-p1.add_comment(u1, "Thank you!")
-
-# Display
-print(p1)
-
-print("Total Posts:", Post.total_posts)
+# Output:
+# Students:
+# ID: 1, Name: Alice
+# ID: 2, Name: Bob
+# Students after deletion:
+# ID: 2, Name: Bob

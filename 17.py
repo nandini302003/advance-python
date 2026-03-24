@@ -1,21 +1,28 @@
-class Book:
-    def __init__(self, title, author):
-        self.title = title
-        self.author = author
-        print(f"Book added: {self.title}")
+'''17. Exception Handling:
+ - Create custom exception "InvalidAgeError"
+ - Raise error if age < '''
 
-    def __del__(self):
-        print(f"Book removed: {self.title}")
+class InvalidAgeError(Exception):
+    def __init__(self, age):
+        self.age = age
+        super().__init__(f"Invalid age: {age}. Age must be 0 or above.")
+
+def check_age(age):
+    if age < 0:
+        raise InvalidAgeError(age)
+    else:
+        print(f"Valid age: {age}")
+
+# Example usage
+try:  
+    check_age(-5)
+except InvalidAgeError as e:
+    print(e)
+try:
+    check_age(25)
+except InvalidAgeError as e:
+    print(e)
 
 
-class Member:
-    def __init__(self, name):
-        self.name = name
-        print(f"Member created: {self.name}")
-
-
-# Example
-b1 = Book("Python Basics", "John")
-m1 = Member("Nandini")
-
-del b1   # triggers destructor
+# Output:# Invalid age: -5. Age must be 0 or above.
+# Valid age: 25             

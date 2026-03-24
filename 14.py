@@ -1,15 +1,24 @@
-def power(base, exp):
-    result = 1
+'''16. Write a program:
+ - Simulate login system
+ - Use file to store username/password'''
 
-    for _ in range(abs(exp)):
-        result *= base
+def login_system():
+    with open('users.txt', 'r') as f:
+        users = f.read().splitlines()
+    
+    username = input("Enter username: ")
+    password = input("Enter password: ")
+    
+    if f"{username}:{password}" in users:
+        print("Login successful!")
+    else:
+        print("Invalid username or password.")
+if __name__ == "__main__":
+    login_system()
 
-    if exp < 0:
-        return 1 / result
-    return result
 
-# Example
-b = int(input("Enter base: "))
-e = int(input("Enter exponent: "))
-
-print("Result:", power(b, e))
+    # Sample users.txt content:
+    # user1:pass1   
+    # user2:pass2
+    # user3:pass3
+    

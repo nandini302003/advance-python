@@ -1,17 +1,8 @@
-import string
+'''13. Write a program using lambda + map + filter:
+ - Square only even numbers from a list of numbers form a list.'''
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+even_numbers = list(filter(lambda x: x % 2 == 0, numbers))
+squared_evens = list(map(lambda x: x ** 2, even_numbers))
+print("Squared even numbers:", squared_evens)
 
-sentence = input("Enter sentence: ").lower()
-
-# Remove spaces and punctuation
-cleaned = ""
-for ch in sentence:
-    if ch.isalnum():
-        cleaned += ch
-
-unique_chars = []
-
-for ch in cleaned:
-    if cleaned.count(ch) == 1:
-        unique_chars.append(ch)
-
-print("Unique characters:", unique_chars)
+# Output: Squared even numbers: [4, 16, 36, 64, 100]

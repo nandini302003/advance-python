@@ -1,21 +1,26 @@
-employees = {}
+"""Write a program to:
+ - Take input string
+ - Count vowels and consonants"""
 
-while True:
-    print("\n1. Add Employee\n2. Remove Employee\n3. Display\n4. Exit")
-    choice = input("Enter choice: ")
+def count_vowels_consonants(input_string):
+    vowels = 'aeiouAEIOU'
+    vowel_count = 0
+    consonant_count = 0
 
-    if choice == "1":
-        name = input("Enter employee name: ")
-        employees[name] = "Present"
+    for char in input_string:
+        if char.isalpha():  # Check if the character is an alphabet
+            if char in vowels:
+                vowel_count += 1
+            else:
+                consonant_count += 1
 
-    elif choice == "2":
-        name = input("Enter name to remove: ")
-        employees.pop(name, None)
+    return vowel_count, consonant_count
 
-    elif choice == "3":
-        for name, status in employees.items():
-            print(name, "-", status)
+# Example usage:
+input_str = input("Enter a string: ")
+vowels, consonants = count_vowels_consonants(input_str)
+print(f"Vowels: {vowels}, Consonants: {consonants}")
 
-    elif choice == "4":
-        break
-    
+#output:
+# Enter a string: Hello World   
+# Vowels: 3, Consonants: 7

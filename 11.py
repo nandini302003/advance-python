@@ -1,39 +1,31 @@
-menu = {
-    "pizza": 200,
-    "burger": 100,
-    "pasta": 150,
-    "coffee": 80
-}
+'''11. Write a program:
+ - Create a class BankAccount
+ - Methods: deposit, withdraw, check balance'''
 
-cart = {}
-total = 0
+class BankAccount:
+    def __init__(self):
+        self.balance = 0
 
-while True:
-    print("\nMenu:")
-    for item, price in menu.items():
-        print(item, ":", price)
+    def deposit(self, amount):
+        self.balance += amount
+        print(f"Deposited: {amount}. Current balance: {self.balance}")
 
-    choice = input("Enter item to order (or 'done'): ").lower()
+    def withdraw(self, amount):
+        if amount > self.balance:
+            print("Insufficient funds.")
+        else:
+            self.balance -= amount
+            print(f"Withdrew: {amount}. Current balance: {self.balance}")
 
-    if choice == "done":
-        break
+    def check_balance(self):
+        print(f"Current balance: {self.balance}")
+# Example usage
+account = BankAccount()
+account.deposit(100)
+account.withdraw(30)
+account.check_balance()
 
-    if choice in menu:
-        qty = int(input("Enter quantity: "))
-        cart[choice] = cart.get(choice, 0) + qty
-    else:
-        print("Item not available")
 
-# Bill calculation
-print("\n--- BILL ---")
-for item, qty in cart.items():
-    cost = menu[item] * qty
-    total += cost
-    print(item, "x", qty, "=", cost)
-
-tax = total * 0.05
-grand_total = total + tax
-
-print("Subtotal:", total)
-print("Tax (5%):", tax)
-print("Total Bill:", grand_total)
+# Output:# Deposited: 100. Current balance: 100
+# Withdrew: 30. Current balance: 70
+# Current balance: 70   

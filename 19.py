@@ -1,44 +1,35 @@
-class Vehicle:
-    total_rented = 0   # class variable
+'''19. Python + SQL:
+ - Connect database
+ - Create table Student
+ - Insert 3 records
+ - Fetch and display all
+'''
 
-    def __init__(self, name):
-        self.name = name
+import sqlite3
+# Connect to SQLite database (or create it if it doesn't exist)
+conn = sqlite3.connect('students.db')
+cursor = conn.cursor()
+# Create Student table
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS Student (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL
+    )
+''')
+# Insert 3 records into Student table
+students = [('Alice',), ('Bob',), ('Charlie',)]
+cursor.executemany('INSERT INTO Student (name) VALUES (?)', students)
+# Commit the changes
+conn.commit()
+# Fetch and display all records from Student table
+cursor.execute('SELECT * FROM Student')
+rows = cursor.fetchall()
+for row in rows:
+    print(f"ID: {row[0]}, Name: {row[1]}")
+# Close the database connection
+conn.close()
 
-    def rent(self, days):
-        pass
-
-
-class Car(Vehicle):
-    rate = 1000
-
-    def rent(self, days):
-        Vehicle.total_rented += 1
-        return days * Car.rate
-
-
-class Bike(Vehicle):
-    rate = 300
-
-    def rent(self, days):
-        Vehicle.total_rented += 1
-        return days * Bike.rate
-
-
-class Truck(Vehicle):
-    rate = 2000
-
-    def rent(self, days):
-        Vehicle.total_rented += 1
-        return days * Truck.rate
-
-
-# Example
-c = Car("Sedan")
-b = Bike("Yamaha")
-t = Truck("Tata")
-
-print("Car Rent:", c.rent(3))
-print("Bike Rent:", b.rent(2))
-print("Truck Rent:", t.rent(1))
-
-print("Total Vehicles Rented:", Vehicle.total_rented)
+# Output:
+# ID: 1, Name: Alice
+# ID: 2, Name: Bob
+# ID: 3, Name: Charlie
